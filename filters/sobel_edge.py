@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-
+# Function for image filter
 def sobel_edge(image_path):
     #Load image
     img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
@@ -18,6 +18,7 @@ def sobel_edge(image_path):
 
     return magnitude
 
+# Check for main program or being imported as module
 if __name__ == "__main__":
     path = "../images/input/sample.jpg"
     output_path = "../images/output/sobel_edge.jpg"
