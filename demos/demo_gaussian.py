@@ -3,7 +3,7 @@ from filters.gaussian_blur import gaussian_blur
 import matplotlib.pyplot as plt
 import cv2
 
-img = gaussian_blur("../images/input/sample.jpg")
+img = gaussian_blur("../images/input/sample.heic")
 
 #pyplot data & display
 plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
