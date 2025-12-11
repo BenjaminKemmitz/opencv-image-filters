@@ -31,49 +31,23 @@ Or run the main demo:
 python main.py --image assets/sample.jpg --filter blur
 
 # Available Filters
-1. Blur Filter
-
-Uses Gaussian blur.
-
-Demonstrates smoothing and noise reduction.
-
-2. Sharpen Filter
-
-Applies a high-pass convolution kernel.
-
-Enhances edges and details.
-
-3. Edge Detection Filter
-
-Implements Canny Edge Detection.
-
-Great for robotics vision and feature extraction.
-
-4. Emboss Filter
-
-Uses directional convolution to simulate “3D” lighting.
-
-5. Cartoon Filter
-
-Bilateral filtering + adaptive threshold.
-
-Produces stylized cartoon-like images.
-
-6. Threshold Filter
-
-Converts image to grayscale and applies binary threshold.
-
-7. HSV Filter
-
-Demonstrates color-space conversion (RGB → HSV).
-
-Extracts a user-defined color range.
-
-8. Invert Filter
-
-Simple pixel inversion.
-
-Useful for understanding direct pixel operations.
+1. Gaussian Blur
+  Demonstrates smoothing and noise reduction.
+2. Median Filter
+3. Bilateral Filter
+4. Sobel Operator
+5. Laplacian Filter
+6. Canny Edge Detector
+7. Morphological Operations
+9. HSV Color Segmentation
+10. Thresholding
+11. Adaptive Thresholding
+12. Otsu’s Thresholding
+13. Harris Corner Detector
+14. Shi-Tomasi Good Features to Track
+15. ORB Feature Detector
+16. FAST Corner Detector
+17. Custom Sharpening Filter
 
 # Example Output (Optional Screenshots Section)
 
