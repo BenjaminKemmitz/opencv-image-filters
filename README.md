@@ -32,23 +32,37 @@ python main.py --image assets/sample.jpg --filter blur
 
 # Available Filters
 1. Gaussian Blur
-  Demonstrates smoothing and noise reduction.
+Applies a Gaussian kernel to smooth an image, reducing noise and detail while preserving overall structure.
 2. Median Filter
+Replaces each pixel with the median of its neighborhood, highly effective for removing salt-and-pepper noise.
 3. Bilateral Filter
+Smooths images while preserving edges by combining spatial and intensity information—ideal for denoising without blurring edges.
 4. Sobel Operator
+Computes gradient magnitude in the x and y directions to highlight vertical and horizontal edges.
 5. Laplacian Filter
+Uses the second derivative of pixel intensity to detect regions of rapid intensity change—useful for highlighting fine edges.
 6. Canny Edge Detector
+A multi-stage edge detection algorithm that uses gradients, smoothing, and thresholding to extract clean, accurate edges.
 7. Morphological Operations
-9. HSV Color Segmentation
-10. Thresholding
-11. Adaptive Thresholding
-12. Otsu’s Thresholding
-13. Harris Corner Detector
-14. Shi-Tomasi Good Features to Track
-15. ORB Feature Detector
-16. FAST Corner Detector
-17. Custom Sharpening Filter
-
+Includes erosion, dilation, opening, and closing to manipulate image structures—often used for noise removal and shape analysis.
+8. HSV Color Segmentation
+Converts the image to HSV space and isolates pixels within color ranges, allowing robust color-based masking and detection.
+9. Basic Thresholding
+Converts an image to binary by comparing pixel intensity to a fixed threshold value.
+10. Adaptive Thresholding
+Determines local thresholds for small regions, performing well in uneven lighting conditions.
+11. Otsu’s Thresholding
+Automatically computes the optimal threshold by maximizing inter-class variance—ideal when the image histogram is bimodal.
+12. Harris Corner Detector
+Detects corners by analyzing variations in intensity in local windows—useful for tracking and alignment tasks.
+13. Shi-Tomasi Good Features to Track
+An improvement over Harris that selects the most stable corners for tracking in real-time applications.
+14. ORB Feature Detector
+A fast, rotation-invariant keypoint detector and descriptor generator used in SLAM, mapping, and object recognition.
+15. FAST Corner Detector
+Extremely fast corner detector ideal for real-time vision tasks, especially in embedded or robotics systems.
+16. Custom Sharpening Filter
+Enhances edges and fine details using a manually designed convolution kernel to increase image crispness.
 # Example Output (Optional Screenshots Section)
 
 You may later add:
