@@ -63,23 +63,17 @@ A fast, rotation-invariant keypoint detector and descriptor generator used in SL
 Extremely fast corner detector ideal for real-time vision tasks, especially in embedded or robotics systems.
 16. Custom Sharpening Filter
 Enhances edges and fine details using a manually designed convolution kernel to increase image crispness.
-# Example Output (Optional Screenshots Section)
-
-You may later add:
+# Output (Will Add Screenshots)
 
 assets/examples/blur_result.png
 assets/examples/cartoon_result.png
 
 # Extending the Project
 
-Good next steps:
-
+Next steps:
 Add real-time webcam filter versions.
-
 Add custom convolution kernels (motion blur, Sobel, Laplacian).
-
 Implement CUDA acceleration using OpenCV GPU.
-
 Package as a pip-installable module.
 
 # Contributing
