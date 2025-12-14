@@ -3,14 +3,6 @@ import cv2
 import sys
 
 from filters.gaussian_blur import gaussian_blur
-from filters.sharpen_filter import apply_sharpen
-from filters.edge_detect_filter import apply_edge_detect
-from filters.emboss_filter import apply_emboss
-from filters.cartoon_filter import apply_cartoon
-from filters.threshold_filter import apply_threshold
-from filters.hsv_filter import apply_hsv
-from filters.invert_filter import apply_invert
-
 
 FILTERS = {
     "blur": apply_blur,
