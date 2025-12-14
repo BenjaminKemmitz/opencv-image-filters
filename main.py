@@ -5,14 +5,7 @@ import sys
 from filters.gaussian_blur import gaussian_blur
 
 FILTERS = {
-    "blur": apply_blur,
-    "sharpen": apply_sharpen,
-    "edge": apply_edge_detect,
-    "emboss": apply_emboss,
-    "cartoon": apply_cartoon,
-    "threshold": apply_threshold,
-    "hsv": apply_hsv,
-    "invert": apply_invert,
+    "blur": gaussian_blur,
 }
 
 
