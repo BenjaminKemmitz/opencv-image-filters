@@ -1,8 +1,7 @@
 import cv2
 
 # Reads input image, defines guassian blur
-def gaussian_blur(image_path, ksize=(5, 5), sigma=0):
-    image = cv2.imread(image_path)
+def gaussian_blur(image, ksize=(5, 5), sigma=0):
     blurred = cv2.GaussianBlur(image, ksize, sigma)
     return blurred
 
