@@ -1,7 +1,7 @@
 import cv2
 
 # Define median filter function, run through medianBlur operator
-def median(image, ksize=15):
+def median(image, ksize=7):
     if image is None:
         raise ValueError("Input image is None")
     
