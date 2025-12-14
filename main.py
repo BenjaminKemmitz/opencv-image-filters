@@ -62,9 +62,15 @@ def main():
     # Apply filter
     result = FILTERS[filter_name](img)
 
-    # Display
-    cv2.imshow("Input", img)
-    cv2.imshow("Output", result)
+    # Save output
+    output_path = f"images/output/{filter_name}_output.jpg"
+    cv2.imwrite(output_path, result)
+    print(f"Saved output to {output_path}")
+
+    # Resize for display
+    display_img = resize_for_display(result)
+
+    cv2.imshow("Output", display_img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
