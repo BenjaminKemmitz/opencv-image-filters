@@ -1,15 +1,15 @@
 import cv2
 
-# Reads input image, defines guassian blur
-def gaussian_blur(image, ksize=(15, 15), sigma=0):
-    blurred = cv2.GaussianBlur(image, ksize, sigma)
-    return blurred
+def gaussian_blur(image, ksize=(21, 21), sigma=0):
+    return cv2.GaussianBlur(image, ksize, sigma)
 
-#Apply Gaussian Blur
+
+# Optional standalone test
 if __name__ == "__main__":
-    path = "../images/input/sample.jpg"
-    output_path = "../images/output/gaussian_blur.jpg"
-  
-    result = gaussian_blur(path)
-    cv2.imwrite(output_path, result)
-    print(f"Saved: {output_path}")
+    img = cv2.imread("../images/input/sample.jpg")
+    if img is None:
+        raise ValueError("Could not load image")
+
+    result = gaussian_blur(img)
+    cv2.imwrite("../images/output/gaussian_blur.jpg", result)
+    print("Saved: ../images/output/gaussian_blur.jpg")
