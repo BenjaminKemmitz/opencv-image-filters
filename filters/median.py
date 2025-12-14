@@ -1,7 +1,7 @@
 import cv2
 
 # Define median filter function, run through medianBlur operator
-def median_filter(image, ksize=5):
+def median(image, ksize=5):
     if image is None:
         raise ValueError("Input image is None")
     
@@ -14,6 +14,6 @@ if __name__ == "__main__":
     if img is None:
         raise ValueError("Could not load image")
 
-    result = median_filter(img)
+    result = median(img)
     cv2.imwrite("../images/output/median_filter.jpg", result)
     print("Saved: ../images/output/median.jpg")
