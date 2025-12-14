@@ -2,7 +2,7 @@ import argparse
 import cv2
 import sys
 
-from filters.blur_filter import apply_blur
+from filters.gaussian_blur import apply_gaussian_blur
 from filters.sharpen_filter import apply_sharpen
 from filters.edge_detect_filter import apply_edge_detect
 from filters.emboss_filter import apply_emboss
