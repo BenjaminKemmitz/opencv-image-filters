@@ -61,11 +61,20 @@ def main():
 
     # Apply filter
     result = FILTERS[filter_name](img)
+    import os
 
-    # Save output
-    output_path = f"images/output/{filter_name}_output.jpg"
-    cv2.imwrite(output_path, result)
-    print(f"Saved output to {output_path}")
+    project_root = os.path.dirname(os.path.abspath(__file__))
+    output_dir = os.path.join(project_root, "images", "output")
+    os.makedirs(output_dir, exist_ok=True)
+
+    output_path = os.path.join(output_dir, f"{filter_name}_output.jpg")
+
+    success = cv2.imwrite(output_path, result)
+    if success:
+        print(f"Saved output to {output_path}")
+    else:
+        print(f"ERROR: Failed to save image to {output_path}")
+
 
     # Resize for display
     display_img = resize_for_display(result)
