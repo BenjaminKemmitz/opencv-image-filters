@@ -75,6 +75,9 @@ def main():
     else:
         print(f"ERROR: Failed to save image to {output_path}")
 
+    print("Result type:", type(result))
+    print("Result shape:", result.shape if result is not None else None)
+    print("Result dtype:", result.dtype if result is not None else None)
 
     # Resize for display
     display_img = resize_for_display(result)
