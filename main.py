@@ -35,7 +35,7 @@ FILTERS = {
     "custom": custom_kernel,
     "fast": fast_features,
     "harris": harris_corners,
-    "hsv": hsv_color_segment,
+    "hsv": hsv_segment,
     "laplacian": laplacian_edge,
     "median": median,
     "morphology": morphology,
