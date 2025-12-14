@@ -43,7 +43,7 @@ FILTERS = {
     "otsu": otsu_thresholding,
     "shi-tomasi": shi_tomasi,
     "sobel": sobel_edge,
-    "thresholding": thresholding,
+    "thresholding": basic_threshold,
 }
 
 # ----------------------------
