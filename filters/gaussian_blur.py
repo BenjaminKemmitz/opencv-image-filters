@@ -1,6 +1,6 @@
 import cv2
 
-def gaussian_blur(image, ksize=(35, 35), sigma=0):
+def gaussian_blur(image, ksize=(65, 65), sigma=0):
     return cv2.GaussianBlur(image, ksize, sigma)
 
 
