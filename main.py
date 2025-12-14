@@ -2,6 +2,15 @@ import argparse
 import cv2
 import sys
 
+def resize_for_display(image, max_width=800):
+    h, w = image.shape[:2]
+    if w <= max_width:
+        return image
+
+    scale = max_width / w
+    new_size = (int(w * scale), int(h * scale))
+    return cv2.resize(image, new_size, interpolation=cv2.INTER_AREA)
+
 from filters.gaussian_blur import gaussian_blur
 
 FILTERS = {
