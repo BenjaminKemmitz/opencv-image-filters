@@ -5,7 +5,7 @@ def median(image, ksize=5):
     if image is None:
         raise ValueError("Input image is None")
     
-    filtered = cv2.medianBlur(imgage, ksize)
+    filtered = cv2.medianBlur(image, ksize)
     return filtered
 
 # Optional standalone test
