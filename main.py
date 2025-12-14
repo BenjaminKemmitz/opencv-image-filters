@@ -10,7 +10,7 @@ from filters.gaussian_blur import gaussian_blur
 from filters.adaptive_threshold import adaptive_threshold
 from filters.bilateral_filter import bilateral_filter
 from filters.canny_edge import canny_edge
-from filters.custom_kernel import custom_filter
+from filters.custom_kernel import custom_kernel
 from filters.fast_features import fast_features
 from filters.harris_corners import harris_corners
 from filters.hsv_color_segment import hsv_segment
