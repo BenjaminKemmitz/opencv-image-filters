@@ -12,9 +12,39 @@ def resize_for_display(image, max_width=800):
     return cv2.resize(image, new_size, interpolation=cv2.INTER_AREA)
 
 from filters.gaussian_blur import gaussian_blur
+from filters.adaptive_threshold import adaptive_threshold
+from filters.bilateral_filter import bilateral_filter
+from filters.canny_edge import canny_edge
+from filters.custom_kernel import custom_filter
+from filters.fast_features import fast_features
+from filters.harris_corners import harris_corners
+from filters.hsv_color_segment import hsv_segment
+from filters.laplacian_edge import laplacian_edge
+from filters.median import median
+from filters.morphology import morphology
+from filters.orb_features import orb_features
+from filters.otsu_thresholding import otsu_threshold
+from filters.shi_tomasi import shi_tomasi
+from filters.sobel_edge import sobel_edge
+from filters.thresholding import basic_threshold
 
 FILTERS = {
     "blur": gaussian_blur,
+    "a-threshold": adaptive_threshold,
+    "bilateral": bilateral_filter,
+    "canny": canny_edge,
+    "custom": custom_kernel,
+    "fast": fast_features,
+    "harris": harris_corners,
+    "hsv": hsv_color_segment,,
+    "laplacian": laplacian_edge,
+    "median": median,
+    "morphology": morphology,
+    "orb": orb_features,
+    "otsu": otsu_thresholding,
+    "shi-tomasi": shi_tomasi,
+    "sobel": sobel_edge,
+    "thresholding": thresholding,
 }
 
 
