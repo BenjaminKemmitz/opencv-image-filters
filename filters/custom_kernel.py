@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 # Define filter function
-def custom_filter(image_path):
+def custom_kernel(image_path):
     img = cv2.imread(image_path)
 
     # Sharpen filter kernel
