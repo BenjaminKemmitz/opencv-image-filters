@@ -18,7 +18,7 @@ from filters.laplacian_edge import laplacian_edge
 from filters.median import median
 from filters.morphology import morphology
 from filters.orb_features import orb_features
-from filters.otsu_thresholding import otsu_threshold
+from filters.otsu_thresholding import otsu_thresholding
 from filters.shi_tomasi import shi_tomasi
 from filters.sobel_edge import sobel_edge
 from filters.thresholding import basic_threshold
