@@ -126,17 +126,17 @@ def main():
     # ----------------------------
     # Metrics
     # ----------------------------
-    psnr_value = compute_psnr(original, filtered)
-    ssim_value = compute_ssim(original, filtered)
-    edge_val = edge_density(filtered)
+    psnr = compute_psnr(original, filtered)
+    ssim = compute_ssim(original, filtered)
+    edge_density = compute_edge_density(filtered)
     runtime_ms = measure_runtime(filter_func, original) * 1000
 
     print("\n--- Filter Evaluation Metrics ---")
     print(f"Filter: {filter_name}")
-    print(f"PSNR: {psnr_value:.2f} dB")
-    print(f"SSIM: {ssim_value:.4f}")
-    print(f"Edge Density: {edge_val:.4f}")
-    print(f"Runtime: {runtime_ms:.2f} ms")
+    print(f"PSNR: {psnr:.2f}")
+    print(f"SSIM: {ssim:.4f}")
+    print(f"Edge Density: {edge_density:.4f}")
+    print(f"Runtime: {runtime:.6f} seconds")
 
     metrics_path = os.path.join(project_root, "experiments", "metrics.csv")
     os.makedirs(os.path.dirname(metrics_path), exist_ok=True)
