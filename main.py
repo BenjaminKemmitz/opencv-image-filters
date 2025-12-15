@@ -62,13 +62,13 @@ def resize_for_display(image, max_width=800):
     )
 
 def compute_psnr(original, filtered):
-    return peak_signal_noise_ratio(original, filtered)
+    return peak_signal_noise_ratio(original, filtered, data_range=255)
 
 def compute_ssim(original, filtered):
      return structural_similarity(
-        original,
-        filtered,
-        channel_axis=2
+        cv2.cvtColor(original, cv2.COLOR_BGR2GRAY),
+        cv2.cvtColor(filtered, cv2.COLOR_BGR2GRAY),
+        data_range=255
     )
     
 def compute_edge_density(image):
@@ -99,16 +99,18 @@ def main():
     parser.add_argument("--filter", type=str, required=True, help="Filter name")
     parser.add_argument("--list", action="store_true", help="List filters and exit")
     parser.add_argument("--no-display", action="store_true", help="Disable GUI output")
-
+    parser.add_argument( "--all", action="store_true", help="Apply all available filters to the input image")
     args = parser.parse_args()
 
     if args.list:
         list_filters()
         sys.exit(0)
 
+    if not args.all:
     filter_name = args.filter.lower()
+
     if filter_name not in FILTERS:
-        print(f"Error: Unknown filter '{filter_name}'")
+        print(f"Error: Unknown filter '{filter_name}'.")
         list_filters()
         sys.exit(1)
 
@@ -121,7 +123,7 @@ def main():
         print(f"Error: Could not load image '{args.image}'")
         sys.exit(1)
 
-    filter_func = FILTERS[filter_name]
+   
 
     # Apply filter
     filtered = filter_func(original)
@@ -164,10 +166,25 @@ def main():
     # ----------------------------
     output_dir = os.path.join(project_root, "images", "output")
     os.makedirs(output_dir, exist_ok=True)
+    
+    import time
 
-    output_path = os.path.join(output_dir, f"{filter_name}_output.jpg")
-    cv2.imwrite(output_path, filtered)
-    print(f"\nSaved output to {output_path}")
+    filters_to_run = FILTERS.keys() if args.all else [filter_name]
+
+    for name in filters_to_run:
+        print(f"Applying filter: {name}")
+
+        start = time.perf_counter()
+        result = FILTERS[name](img)
+        elapsed = time.perf_counter() - start
+
+        output_path = os.path.join(output_dir, f"{name}_output.jpg")
+        success = cv2.imwrite(output_path, result)
+
+        if success:
+            print(f"  Saved: {output_path} ({elapsed:.4f}s)")
+        else:
+            print(f"  ERROR saving {name}")
 
     # ----------------------------
     # Display
@@ -177,9 +194,11 @@ def main():
             resize_for_display(original),
             resize_for_display(filtered)
         ])
-        cv2.imshow("Original | Filtered", combined)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+        if not args.all:
+            display_img = resize_for_display(result)
+            cv2.imshow("Original", display_img)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
 
 if __name__ == "__main__":
     main()
