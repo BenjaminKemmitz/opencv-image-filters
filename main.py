@@ -269,8 +269,8 @@ def main():
             print(f)
         sys.exit(0)
 
-    if not args.dataset and not args.all and not args.filter:
-        print("Error: specify --filter, --all, or --dataset")
+    if not (args.dataset or args.all or args.filter or args.noise_benchmark):
+        print("Error: specify --filter, --all, --dataset, or --noise-benchmark")
         sys.exit(1)
 
     project_root = os.path.dirname(os.path.abspath(__file__))
