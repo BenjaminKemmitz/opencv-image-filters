@@ -2,17 +2,33 @@ import cv2
 import numpy as np
 
 def morphology(image):
-    _, binary = cv2.threshold(image, 128, 255, cv2.THRESH_BINARY)
+    """
+    Morphological operations demo (opening + closing).
+    Input: BGR image
+    Output: BGR image
+    """
+    if image is None:
+        raise ValueError("Input image is None")
 
-    kernel = np.ones((5,5), np.uint8)
+    # Convert to grayscale
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-    eroded = cv2.erode(binary, kernel, iterations=1)
-    dilated = cv2.dilate(binary, kernel, iterations=1)
+    # Threshold to binary
+    _, binary = cv2.threshold(
+        gray, 128, 255, cv2.THRESH_BINARY
+    )
 
+    kernel = np.ones((5, 5), np.uint8)
+
+    # Apply morphology
     opening = cv2.morphologyEx(binary, cv2.MORPH_OPEN, kernel)
     closing = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, kernel)
 
-    return eroded, dilated, opening, closing
+    # Combine results side-by-side (visual clarity)
+    combined = cv2.hconcat([opening, closing])
+
+    # Convert back to BGR for pipeline consistency
+    return cv2.cvtColor(combined, cv2.COLOR_GRAY2BGR)
 
 if __name__ == "__main__":
     e, d, o, c = morphology("../images/input/sample.jpg")
