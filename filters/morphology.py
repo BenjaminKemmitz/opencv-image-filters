@@ -3,7 +3,7 @@ import numpy as np
 
 def morphology(image):
     """
-    Morphological operations demo (opening + closing).
+    Morphological opening (noise removal).
     Input: BGR image
     Output: BGR image
     """
@@ -14,25 +14,12 @@ def morphology(image):
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     # Threshold to binary
-    _, binary = cv2.threshold(
-        gray, 128, 255, cv2.THRESH_BINARY
-    )
+    _, binary = cv2.threshold(gray, 128, 255, cv2.THRESH_BINARY)
 
     kernel = np.ones((5, 5), np.uint8)
 
-    # Apply morphology
-    opening = cv2.morphologyEx(binary, cv2.MORPH_OPEN, kernel)
-    closing = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, kernel)
+    # Apply opening (most common morphology op)
+    opened = cv2.morphologyEx(binary, cv2.MORPH_OPEN, kernel)
 
-    # Combine results side-by-side (visual clarity)
-    combined = cv2.hconcat([opening, closing])
-
-    # Convert back to BGR for pipeline consistency
-    return cv2.cvtColor(combined, cv2.COLOR_GRAY2BGR)
-
-if __name__ == "__main__":
-    e, d, o, c = morphology("../images/input/sample.jpg")
-    cv2.imwrite("../images/output/eroded.jpg", e)
-    cv2.imwrite("../images/output/dilated.jpg", d)
-    cv2.imwrite("../images/output/opening.jpg", o)
-    cv2.imwrite("../images/output/closing.jpg", c)
+    # Convert back to BGR
+    return cv2.cvtColor(opened, cv2.COLOR_GRAY2BGR)
