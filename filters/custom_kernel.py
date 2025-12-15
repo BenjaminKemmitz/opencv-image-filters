@@ -2,9 +2,7 @@ import cv2
 import numpy as np
 
 # Define filter function
-def custom_kernel(image_path):
-    img = cv2.imread(image_path)
-
+def custom_kernel(image):
     # Sharpen filter kernel
     kernel = np.array([
         [0, -1, 0],
@@ -12,7 +10,7 @@ def custom_kernel(image_path):
         [0, -1, 0]
     ])
     
-    filtered = cv2.filter2D(img, -1, kernel)
+    filtered = cv2.filter2D(image, -1, kernel)
     return filtered
 
 # Check if main file
