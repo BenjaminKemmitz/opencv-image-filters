@@ -172,21 +172,49 @@ def main():
 
     filters_to_run = FILTERS.keys() if args.all else [filter_name]
 
+    with open(metrics_path, "a", newline="") as csvfile:
+    writer = csv.writer(csvfile)
+
+    if write_header:
+        writer.writerow([
+            "filter",
+            "psnr",
+            "ssim",
+            "edge_density",
+            "runtime_ms"
+        ])
+
     for name in filters_to_run:
         print(f"Applying filter: {name}")
 
         start = time.perf_counter()
         result = FILTERS[name](img)
-        elapsed = time.perf_counter() - start
+        runtime_ms = (time.perf_counter() - start) * 1000
 
         output_path = os.path.join(output_dir, f"{name}_output.jpg")
-        success = cv2.imwrite(output_path, result)
+        cv2.imwrite(output_path, result)
 
-        if success:
-            print(f"  Saved: {output_path} ({elapsed:.4f}s)")
-        else:
-            print(f"  ERROR saving {name}")
+        # Metrics
+        psnr_val = compute_psnr(img, result)
+        ssim_val = compute_ssim(img, result)
+        edge_density = compute_edge_density(result)
 
+        writer.writerow([
+            name,
+            f"{psnr_val:.4f}",
+            f"{ssim_val:.4f}",
+            f"{edge_density:.6f}",
+            f"{runtime_ms:.2f}"
+        ])
+
+        print(
+            f"  PSNR={psnr_val:.2f}, "
+            f"SSIM={ssim_val:.4f}, "
+            f"Edges={edge_density:.5f}, "
+            f"Time={runtime_ms:.2f}ms"
+        )
+
+    
     # ----------------------------
     # Display
     # ----------------------------
