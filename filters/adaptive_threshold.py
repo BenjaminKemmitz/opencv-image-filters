@@ -1,13 +1,19 @@
 import cv2
 
 def adaptive_threshold(image):
+     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
     binary = cv2.adaptiveThreshold(
-        image, 255,
-        cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-        cv2.THRESH_BINARY,
-        11, 2
+        gray,
+        maxValue=255,
+        adaptiveMethod=cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+        thresholdType=cv2.THRESH_BINARY,
+        blockSize=11,
+        C=2
     )
-    return binary
+
+    # Convert back to BGR for pipeline consistency
+    return cv2.cvtColor(binary, cv2.COLOR_GRAY2BGR)
 
 if __name__ == "__main__":
     result = adaptive_threshold("../images/input/sample.jpg")
