@@ -13,10 +13,3 @@ def adaptive_threshold(image_path):
 if __name__ == "__main__":
     result = adaptive_threshold("../images/input/sample.jpg")
     cv2.imwrite("../images/output/adaptive_threshold.jpg", result)
-
-
-def gaussian_blur(image, ksize=(65, 65), sigma=0):
-    if image is None:
-        raise ValueError("Input image is None")
-
-    return cv2.GaussianBlur(image, ksize, sigma)
