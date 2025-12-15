@@ -129,7 +129,7 @@ def main():
     psnr = compute_psnr(original, filtered)
     ssim = compute_ssim(original, filtered)
     edge_density = compute_edge_density(filtered)
-    runtime_ms = measure_runtime(filter_func, original) * 1000
+    runtime = measure_runtime(filter_func, original) * 1000
 
     print("\n--- Filter Evaluation Metrics ---")
     print(f"Filter: {filter_name}")
