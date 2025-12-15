@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-def hsv_segment(image, lower, upper):
+def hsv_segment(image, lower = np.array([0, 120, 70]), upper = np.array([10, 255, 255])):
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
     mask = cv2.inRange(hsv, lower, upper)
