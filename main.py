@@ -4,7 +4,8 @@ import sys
 import os
 import time
 import numpy as np
-from skimage.metrics import structural_similarity as ssim
+import pandas as pd
+from skimage.metrics import peak_signal_noise_ratio, structural_similarity
 
 from filters.gaussian_blur import gaussian_blur
 from filters.adaptive_threshold import adaptive_threshold
@@ -60,26 +61,21 @@ def resize_for_display(image, max_width=800):
         interpolation=cv2.INTER_AREA,
     )
 
-def calculate_psnr(original, filtered):
-    mse = np.mean(
-        (original.astype(np.float32) - filtered.astype(np.float32)) ** 2
+def compute_psnr(original, filtered):
+    return peak_signal_noise_ratio(original, filtered)
+
+def compute_ssim(original, filtered):
+     return structure_similarity(
+        original,
+        filtered,
+        channel_axis=2
     )
-    if mse == 0:
-        return float("inf")
-    return 10 * np.log10((255 ** 2) / mse)
+    
+def compute_edge_density(image):
+    edges = cv2.Canny(image, 100, 200)
+    return np.sum(edges > 0) / edges.size
 
-def calculate_ssim(original, filtered):
-    original_gray = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
-    filtered_gray = cv2.cvtColor(filtered, cv2.COLOR_BGR2GRAY)
-    score, _ = ssim(original_gray, filtered_gray, full=True)
-    return score
-
-def edge_density(image):
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    edges = cv2.Canny(gray, 100, 200)
-    return (edges > 0).sum() / edges.size
-
-def measure_runtime(filter_func, image, runs=10):
+def runtime(filter_func, image, runs=10):
     times = []
     for _ in range(runs):
         start = time.perf_counter()
@@ -142,6 +138,24 @@ def main():
     print(f"Edge Density: {edge_val:.4f}")
     print(f"Runtime: {runtime_ms:.2f} ms")
 
+    metrics_path = os.path.join(project_root, "experiments", "metrics.csv")
+    os.makedirs(os.path.dirname(metrics_path), exist_ok=True)
+
+    row = {
+        "image": os.path.basename(args.image),
+        "filter": filter_name,
+        "psnr": psnr,
+        "ssim": ssim,
+        "edge_density": edge_density,
+        "runtime_sec": runtime
+    }
+
+    df = pd.DataFrame([row])
+
+    if os.path.exists(metrics_path):
+        df.to_csv(metrics_path, mode="a", header=False, index=False)
+    else:
+        df.to_csv(metrics_path, index=False)
     # ----------------------------
     # Save output
     # ----------------------------
