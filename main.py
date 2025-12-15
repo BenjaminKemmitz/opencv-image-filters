@@ -87,7 +87,7 @@ def main():
     parser = argparse.ArgumentParser(
         description="OpenCV filter experiment runner with metrics"
     )
-    parser.add_argument("--image", required=True, help="Input image path")
+    parser.add_argument("--image", type=str, help="Input image path")
     parser.add_argument("--filter", help="Single filter name")
     parser.add_argument("--all", action="store_true", help="Run all filters")
     parser.add_argument("--list", action="store_true", help="List filters and exit")
