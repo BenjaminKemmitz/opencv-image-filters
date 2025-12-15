@@ -65,7 +65,7 @@ def compute_psnr(original, filtered):
     return peak_signal_noise_ratio(original, filtered)
 
 def compute_ssim(original, filtered):
-     return structure_similarity(
+     return structural_similarity(
         original,
         filtered,
         channel_axis=2
