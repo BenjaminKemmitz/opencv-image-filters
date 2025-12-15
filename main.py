@@ -5,6 +5,8 @@ import os
 import time
 import csv
 import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
 from skimage.metrics import peak_signal_noise_ratio, structural_similarity
 from datetime import datetime
 
@@ -66,6 +68,35 @@ def compute_ssim(original, filtered):
 def compute_edge_density(image):
     edges = cv2.Canny(image, 100, 200)
     return np.count_nonzero(edges) / edges.size
+
+def generate_plots(csv_path):
+    df = pd.read_csv(csv_path)
+
+    plot_dir = os.path.join(os.path.dirname(csv_path), "plots")
+    os.makedirs(plot_dir, exist_ok=True)
+
+    metrics = {
+        "psnr": "PSNR",
+        "ssim": "SSIM",
+        "edge_density": "Edge Density",
+        "runtime_ms": "Runtime (ms)"
+    }
+
+    for key, label in metrics.items():
+        plt.figure(figsize=(10, 5))
+        plt.bar(df["filter"], df[key])
+        plt.ylabel(label)
+        plt.xlabel("Filter")
+        plt.title(f"{label} by Filter")
+        plt.xticks(rotation=45)
+        plt.tight_layout()
+
+        output_path = os.path.join(plot_dir, f"{key}.png")
+        plt.savefig(output_path)
+        plt.close()
+
+        print(f"Saved plot: {output_path}")
+
 
 # ----------------------------
 # Display helper
@@ -190,7 +221,7 @@ def main():
                 cv2.imshow("Original | Filtered", combined)
                 cv2.waitKey(0)
                 cv2.destroyAllWindows()
-
+    generate_plots(metrics_path)
 
 if __name__ == "__main__":
     main()
