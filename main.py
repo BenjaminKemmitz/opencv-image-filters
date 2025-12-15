@@ -126,8 +126,8 @@ def main():
     # ----------------------------
     # Metrics
     # ----------------------------
-    psnr_value = calculate_psnr(original, filtered)
-    ssim_value = calculate_ssim(original, filtered)
+    psnr_value = compute_psnr(original, filtered)
+    ssim_value = compute_ssim(original, filtered)
     edge_val = edge_density(filtered)
     runtime_ms = measure_runtime(filter_func, original) * 1000
 
