@@ -6,6 +6,7 @@ import time
 import csv
 import numpy as np
 from skimage.metrics import peak_signal_noise_ratio, structural_similarity
+from datetime import datetime
 
 # ----------------------------
 # Import filters
@@ -108,13 +109,15 @@ def main():
     # Paths
     project_root = os.path.dirname(os.path.abspath(__file__))
     output_dir = os.path.join(project_root, "images", "output")
-    metrics_dir = os.path.join(project_root, "experiments")
     os.makedirs(output_dir, exist_ok=True)
+    metrics_dir = os.path.join(project_root, "experiments")
     os.makedirs(metrics_dir, exist_ok=True)
 
-    metrics_path = os.path.join(metrics_dir, "metrics.csv")
-    write_header = not os.path.exists(metrics_path)
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    metrics_path = os.path.join(metrics_dir, f"metrics_{timestamp}.csv")
 
+    write_header = True  # new file every run
+ 
     # Load image
     original = cv2.imread(args.image)
     if original is None:
