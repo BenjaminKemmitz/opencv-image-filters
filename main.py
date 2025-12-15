@@ -55,6 +55,62 @@ FILTERS = {
 # ----------------------------
 # Metrics
 # ----------------------------
+def process_dataset(dataset_dir, filters, output_root):
+    all_results = []
+
+    image_files = [
+        f for f in os.listdir(dataset_dir)
+        if f.lower().endswith((".jpg", ".png", ".jpeg"))
+    ]
+
+    for image_name in image_files:
+        image_path = os.path.join(dataset_dir, image_name)
+        img = cv2.imread(image_path)
+
+        if img is None:
+            print(f"Skipping unreadable image: {image_name}")
+            continue
+
+        for filter_name, filter_func in filters.items():
+            start = time.perf_counter()
+            result = filter_func(img)
+            runtime_ms = (time.perf_counter() - start) * 1000
+
+            psnr_val = compute_psnr(img, result)
+            ssim_val = compute_ssim(img, result)
+            edge_val = compute_edge_density(result)
+
+            all_results.append({
+                "image": image_name,
+                "filter": filter_name,
+                "psnr": psnr_val,
+                "ssim": ssim_val,
+                "edge_density": edge_val,
+                "runtime_ms": runtime_ms
+            })
+
+    return pd.DataFrame(all_results)
+
+def aggregate_dataset_metrics(df):
+    return (
+        df.groupby("filter")
+        .agg(
+            psnr_mean=("psnr", "mean"),
+            ssim_mean=("ssim", "mean"),
+            edge_density_mean=("edge_density", "mean"),
+            runtime_mean=("runtime_ms", "mean"),
+            psnr_std=("psnr", "std"),
+            ssim_std=("ssim", "std")
+        )
+        .reset_index()
+    )
+
+def save_aggregated_results(df, output_dir):
+    os.makedirs(output_dir, exist_ok=True)
+    path = os.path.join(output_dir, "aggregated_metrics.csv")
+    df.to_csv(path, index=False)
+    print(f"Saved aggregated metrics to {path}")
+
 def compute_psnr(original, filtered):
     return peak_signal_noise_ratio(original, filtered, data_range=255)
 
@@ -138,6 +194,26 @@ def generate_markdown_report(csv_path, image_name):
 
     print(f"Generated report: {report_path}")
 
+def generate_dataset_report(agg_df, output_dir):
+    report_path = os.path.join(output_dir, "DATASET_REPORT.md")
+
+    best_psnr = agg_df.loc[agg_df["psnr_mean"].idxmax()]
+    best_ssim = agg_df.loc[agg_df["ssim_mean"].idxmax()]
+    fastest = agg_df.loc[agg_df["runtime_mean"].idxmin()]
+
+    with open(report_path, "w") as f:
+        f.write("# Dataset-Level Filter Benchmark Report\n\n")
+
+        f.write("## Summary\n")
+        f.write(f"- Best PSNR (avg): **{best_psnr['filter']}** ({best_psnr['psnr_mean']:.2f})\n")
+        f.write(f"- Best SSIM (avg): **{best_ssim['filter']}** ({best_ssim['ssim_mean']:.4f})\n")
+        f.write(f"- Fastest Filter (avg): **{fastest['filter']}** ({fastest['runtime_mean']:.2f} ms)\n\n")
+
+        f.write("## Aggregated Metrics\n\n")
+        f.write(agg_df.to_markdown(index=False))
+
+    print(f"Generated dataset report: {report_path}")
+
 
 # ----------------------------
 # Display helper
@@ -185,12 +261,21 @@ def main():
     os.makedirs(output_dir, exist_ok=True)
     metrics_dir = os.path.join(project_root, "experiments")
     os.makedirs(metrics_dir, exist_ok=True)
-
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     metrics_path = os.path.join(metrics_dir, f"metrics_{timestamp}.csv")
-
     write_header = True  # new file every run
- 
+
+    if args.dataset:
+        df = process_dataset(args.dataset, FILTERS, project_root)
+        agg_df = aggregate_dataset_metrics(df)
+    
+        output_dir = os.path.join(project_root, "experiments", "dataset")
+        save_aggregated_results(agg_df, output_dir)
+        generate_dataset_report(agg_df, output_dir)
+    
+        sys.exit(0)
+
+    
     # Load image
     original = cv2.imread(args.image)
     if original is None:
