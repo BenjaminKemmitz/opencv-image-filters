@@ -75,7 +75,7 @@ def compute_edge_density(image):
     edges = cv2.Canny(image, 100, 200)
     return np.sum(edges > 0) / edges.size
 
-def runtime(filter_func, image, runs=10):
+def measure_runtime(filter_func, image, runs=10):
     times = []
     for _ in range(runs):
         start = time.perf_counter()
