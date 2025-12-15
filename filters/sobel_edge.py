@@ -2,14 +2,12 @@ import cv2
 import numpy as np
 
 # Function for image filter
-def sobel_edge(image_path):
-    #Load image
-    img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+def sobel_edge(image):
 
     # Compute x & y gradient directions
     # Arguments: src, ddepth, dx, dy, ksize
-    sobelx = cv2.Sobel(img, cv2.CV_64F, 1, 0, ksize=3)
-    sobely = cv2.Sobel(img, cv2.CV_64F, 0, 1, ksize=3)
+    sobelx = cv2.Sobel(image, cv2.CV_64F, 1, 0, ksize=3)
+    sobely = cv2.Sobel(image, cv2.CV_64F, 0, 1, ksize=3)
 
     # Compute gradient magnitude G= srt(Gx^2 +Gy^2)
     magnitude = cv2.magnitude(sobelx, sobely)
