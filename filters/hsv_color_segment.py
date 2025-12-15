@@ -1,12 +1,11 @@
 import cv2
 import numpy as np
 
-def hsv_segment(image_path, lower, upper):
-    img = cv2.imread(image_path)
-    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+def hsv_segment(image, lower, upper):
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
     mask = cv2.inRange(hsv, lower, upper)
-    result = cv2.bitwise_and(img, img, mask=mask)
+    result = cv2.bitwise_and(image, image, mask=mask)
 
     return mask, result
 
