@@ -97,6 +97,47 @@ def generate_plots(csv_path):
 
         print(f"Saved plot: {output_path}")
 
+def generate_markdown_report(csv_path, image_name):
+    df = pd.read_csv(csv_path)
+
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    report_dir = os.path.dirname(csv_path)
+    report_name = os.path.basename(csv_path).replace("metrics_", "REPORT_").replace(".csv", ".md")
+    report_path = os.path.join(report_dir, report_name)
+
+    best_psnr = df.loc[df["psnr"].idxmax()]
+    best_ssim = df.loc[df["ssim"].idxmax()]
+    fastest = df.loc[df["runtime_ms"].idxmin()]
+
+    with open(report_path, "w", encoding="utf-8") as f:
+        f.write(f"# OpenCV Filter Experiment Report\n\n")
+        f.write(f"**Date:** {timestamp}\n\n")
+        f.write(f"**Input Image:** `{image_name}`\n\n")
+
+        f.write("## Summary\n\n")
+        f.write(f"- Best PSNR: **{best_psnr['filter']}** ({best_psnr['psnr']:.2f})\n")
+        f.write(f"- Best SSIM: **{best_ssim['filter']}** ({best_ssim['ssim']:.4f})\n")
+        f.write(f"- Fastest Filter: **{fastest['filter']}** ({fastest['runtime_ms']:.2f} ms)\n\n")
+
+        f.write("## Metrics Table\n\n")
+        f.write(df.to_markdown(index=False))
+        f.write("\n\n")
+
+        f.write("## Visual Comparisons\n\n")
+        f.write("### PSNR by Filter\n")
+        f.write("![PSNR](plots/psnr.png)\n\n")
+
+        f.write("### SSIM by Filter\n")
+        f.write("![SSIM](plots/ssim.png)\n\n")
+
+        f.write("### Edge Density by Filter\n")
+        f.write("![Edge Density](plots/edge_density.png)\n\n")
+
+        f.write("### Runtime by Filter\n")
+        f.write("![Runtime](plots/runtime_ms.png)\n")
+
+    print(f"Generated report: {report_path}")
+
 
 # ----------------------------
 # Display helper
@@ -124,7 +165,8 @@ def main():
     parser.add_argument("--all", action="store_true", help="Run all filters")
     parser.add_argument("--list", action="store_true", help="List filters and exit")
     parser.add_argument("--no-display", action="store_true", help="Disable GUI")
-
+    parser.add_argument("--dataset", type=str, help="Path to folder of images for dataset-level evaluation")
+    
     args = parser.parse_args()
 
     if args.list:
@@ -222,6 +264,6 @@ def main():
                 cv2.waitKey(0)
                 cv2.destroyAllWindows()
     generate_plots(metrics_path)
-
+    generate_markdown_report(metrics_path, os.path.basename(args.image))
 if __name__ == "__main__":
     main()
