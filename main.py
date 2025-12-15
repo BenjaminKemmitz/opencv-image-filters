@@ -3,10 +3,13 @@ import cv2
 import sys
 import os
 import time
+import csv
 import numpy as np
-import pandas as pd
 from skimage.metrics import peak_signal_noise_ratio, structural_similarity
 
+# ----------------------------
+# Import filters
+# ----------------------------
 from filters.gaussian_blur import gaussian_blur
 from filters.adaptive_threshold import adaptive_threshold
 from filters.bilateral_filter import bilateral_filter
@@ -24,13 +27,12 @@ from filters.shi_tomasi import shi_tomasi
 from filters.sobel_edge import sobel_edge
 from filters.thresholding import basic_threshold
 
-
 # ----------------------------
 # Filter registry
 # ----------------------------
 FILTERS = {
     "blur": gaussian_blur,
-    "a-threshold": adaptive_threshold,
+    "adaptive-threshold": adaptive_threshold,
     "bilateral": bilateral_filter,
     "canny": canny_edge,
     "custom": custom_kernel,
@@ -44,11 +46,28 @@ FILTERS = {
     "otsu": otsu_thresholding,
     "shi-tomasi": shi_tomasi,
     "sobel": sobel_edge,
-    "thresholding": basic_threshold,
+    "threshold": basic_threshold,
 }
 
 # ----------------------------
-# Utility functions
+# Metrics
+# ----------------------------
+def compute_psnr(original, filtered):
+    return peak_signal_noise_ratio(original, filtered, data_range=255)
+
+def compute_ssim(original, filtered):
+    return structural_similarity(
+        cv2.cvtColor(original, cv2.COLOR_BGR2GRAY),
+        cv2.cvtColor(filtered, cv2.COLOR_BGR2GRAY),
+        data_range=255
+    )
+
+def compute_edge_density(image):
+    edges = cv2.Canny(image, 100, 200)
+    return np.count_nonzero(edges) / edges.size
+
+# ----------------------------
+# Display helper
 # ----------------------------
 def resize_for_display(image, max_width=800):
     h, w = image.shape[:2]
@@ -61,173 +80,105 @@ def resize_for_display(image, max_width=800):
         interpolation=cv2.INTER_AREA,
     )
 
-def compute_psnr(original, filtered):
-    return peak_signal_noise_ratio(original, filtered, data_range=255)
-
-def compute_ssim(original, filtered):
-     return structural_similarity(
-        cv2.cvtColor(original, cv2.COLOR_BGR2GRAY),
-        cv2.cvtColor(filtered, cv2.COLOR_BGR2GRAY),
-        data_range=255
-    )
-    
-def compute_edge_density(image):
-    edges = cv2.Canny(image, 100, 200)
-    return np.sum(edges > 0) / edges.size
-
-def measure_runtime(filter_func, image, runs=10):
-    times = []
-    for _ in range(runs):
-        start = time.perf_counter()
-        filter_func(image)
-        times.append(time.perf_counter() - start)
-    return sum(times) / len(times)
-
-def list_filters():
-    print("Available filters:")
-    for f in FILTERS:
-        print(" -", f)
-
 # ----------------------------
 # Main
 # ----------------------------
 def main():
     parser = argparse.ArgumentParser(
-        description="Apply OpenCV filters with quantitative evaluation"
+        description="OpenCV filter experiment runner with metrics"
     )
-    parser.add_argument("--image", type=str, required=True, help="Input image path")
-    parser.add_argument("--filter", type=str, required=True, help="Filter name")
+    parser.add_argument("--image", required=True, help="Input image path")
+    parser.add_argument("--filter", help="Single filter name")
+    parser.add_argument("--all", action="store_true", help="Run all filters")
     parser.add_argument("--list", action="store_true", help="List filters and exit")
-    parser.add_argument("--no-display", action="store_true", help="Disable GUI output")
-    parser.add_argument( "--all", action="store_true", help="Apply all available filters to the input image")
+    parser.add_argument("--no-display", action="store_true", help="Disable GUI")
+
     args = parser.parse_args()
 
     if args.list:
-        list_filters()
+        print("Available filters:")
+        for f in FILTERS:
+            print(" -", f)
         sys.exit(0)
 
-    if not args.all:
-    filter_name = args.filter.lower()
-
-    if filter_name not in FILTERS:
-        print(f"Error: Unknown filter '{filter_name}'.")
-        list_filters()
+    if not args.all and not args.filter:
+        print("Error: specify --filter or --all")
         sys.exit(1)
 
-    import os
+    # Paths
     project_root = os.path.dirname(os.path.abspath(__file__))
-    
+    output_dir = os.path.join(project_root, "images", "output")
+    metrics_dir = os.path.join(project_root, "experiments")
+    os.makedirs(output_dir, exist_ok=True)
+    os.makedirs(metrics_dir, exist_ok=True)
+
+    metrics_path = os.path.join(metrics_dir, "metrics.csv")
+    write_header = not os.path.exists(metrics_path)
+
     # Load image
     original = cv2.imread(args.image)
     if original is None:
         print(f"Error: Could not load image '{args.image}'")
         sys.exit(1)
 
-   
-
-    # Apply filter
-    filtered = filter_func(original)
-
-    # ----------------------------
-    # Metrics
-    # ----------------------------
-    psnr = compute_psnr(original, filtered)
-    ssim = compute_ssim(original, filtered)
-    edge_density = compute_edge_density(filtered)
-    runtime = measure_runtime(filter_func, original) * 1000
-
-    print("\n--- Filter Evaluation Metrics ---")
-    print(f"Filter: {filter_name}")
-    print(f"PSNR: {psnr:.2f}")
-    print(f"SSIM: {ssim:.4f}")
-    print(f"Edge Density: {edge_density:.4f}")
-    print(f"Runtime: {runtime:.6f} seconds")
-
-    # ----------------------------
-    # Save output
-    # ----------------------------
-    output_dir = os.path.join(project_root, "images", "output")
-    os.makedirs(output_dir, exist_ok=True)
-
-    metrics_path = os.path.join(project_root, "experiments", "metrics.csv")
-    os.makedirs(os.path.dirname(metrics_path), exist_ok=True)
-    
-    row = {
-        "image": os.path.basename(args.image),
-        "filter": filter_name,
-        "psnr": psnr,
-        "ssim": ssim,
-        "edge_density": edge_density,
-        "runtime_sec": runtime
-    }
-
-    df = pd.DataFrame([row])
-
-    if os.path.exists(metrics_path):
-        df.to_csv(metrics_path, mode="a", header=False, index=False)
-    else:
-        df.to_csv(metrics_path, index=False)
-    
-    import time
-
-    filters_to_run = FILTERS.keys() if args.all else [filter_name]
+    filters_to_run = FILTERS.keys() if args.all else [args.filter.lower()]
 
     with open(metrics_path, "a", newline="") as csvfile:
-    writer = csv.writer(csvfile)
+        writer = csv.writer(csvfile)
 
-    if write_header:
-        writer.writerow([
-            "filter",
-            "psnr",
-            "ssim",
-            "edge_density",
-            "runtime_ms"
-        ])
+        if write_header:
+            writer.writerow([
+                "image",
+                "filter",
+                "psnr",
+                "ssim",
+                "edge_density",
+                "runtime_ms"
+            ])
 
-    for name in filters_to_run:
-        print(f"Applying filter: {name}")
+        for name in filters_to_run:
+            if name not in FILTERS:
+                print(f"Skipping unknown filter: {name}")
+                continue
 
-        start = time.perf_counter()
-        result = FILTERS[name](img)
-        runtime_ms = (time.perf_counter() - start) * 1000
+            print(f"\nApplying filter: {name}")
+            filter_func = FILTERS[name]
 
-        output_path = os.path.join(output_dir, f"{name}_output.jpg")
-        cv2.imwrite(output_path, result)
+            start = time.perf_counter()
+            result = filter_func(original)
+            runtime_ms = (time.perf_counter() - start) * 1000
 
-        # Metrics
-        psnr_val = compute_psnr(img, result)
-        ssim_val = compute_ssim(img, result)
-        edge_density = compute_edge_density(result)
+            output_path = os.path.join(output_dir, f"{name}_output.jpg")
+            cv2.imwrite(output_path, result)
 
-        writer.writerow([
-            name,
-            f"{psnr_val:.4f}",
-            f"{ssim_val:.4f}",
-            f"{edge_density:.6f}",
-            f"{runtime_ms:.2f}"
-        ])
+            psnr_val = compute_psnr(original, result)
+            ssim_val = compute_ssim(original, result)
+            edge_val = compute_edge_density(result)
 
-        print(
-            f"  PSNR={psnr_val:.2f}, "
-            f"SSIM={ssim_val:.4f}, "
-            f"Edges={edge_density:.5f}, "
-            f"Time={runtime_ms:.2f}ms"
-        )
+            writer.writerow([
+                os.path.basename(args.image),
+                name,
+                f"{psnr_val:.4f}",
+                f"{ssim_val:.4f}",
+                f"{edge_val:.6f}",
+                f"{runtime_ms:.2f}"
+            ])
 
-    
-    # ----------------------------
-    # Display
-    # ----------------------------
-    if not args.no_display:
-        combined = cv2.hconcat([
-            resize_for_display(original),
-            resize_for_display(filtered)
-        ])
-        if not args.all:
-            display_img = resize_for_display(result)
-            cv2.imshow("Original", display_img)
-            cv2.waitKey(0)
-            cv2.destroyAllWindows()
+            print(
+                f"PSNR={psnr_val:.2f} | "
+                f"SSIM={ssim_val:.4f} | "
+                f"Edges={edge_val:.5f} | "
+                f"Time={runtime_ms:.2f}ms"
+            )
+
+            if not args.no_display and not args.all:
+                combined = cv2.hconcat([
+                    resize_for_display(original),
+                    resize_for_display(result)
+                ])
+                cv2.imshow("Original | Filtered", combined)
+                cv2.waitKey(0)
+                cv2.destroyAllWindows()
 
 if __name__ == "__main__":
     main()
