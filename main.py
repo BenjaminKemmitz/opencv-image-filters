@@ -123,7 +123,15 @@ def main():
 
     filters_to_run = FILTERS.keys() if args.all else [args.filter.lower()]
 
-    with open(metrics_path, "a", newline="") as csvfile:
+    # --- SAFE METRICS CSV OPEN ---
+    try:
+        csvfile = open(metrics_path, "a", newline="")
+    except PermissionError:
+        print("\nERROR: metrics.csv is locked.")
+        print("Close Excel / any editor using the file and re-run.")
+        sys.exit(1)
+
+    with csvfile:
         writer = csv.writer(csvfile)
 
         if write_header:
@@ -163,14 +171,14 @@ def main():
                 f"{edge_val:.6f}",
                 f"{runtime_ms:.2f}"
             ])
-
+    
             print(
                 f"PSNR={psnr_val:.2f} | "
                 f"SSIM={ssim_val:.4f} | "
                 f"Edges={edge_val:.5f} | "
                 f"Time={runtime_ms:.2f}ms"
             )
-
+    
             if not args.no_display and not args.all:
                 combined = cv2.hconcat([
                     resize_for_display(original),
@@ -179,6 +187,7 @@ def main():
                 cv2.imshow("Original | Filtered", combined)
                 cv2.waitKey(0)
                 cv2.destroyAllWindows()
+
 
 if __name__ == "__main__":
     main()
