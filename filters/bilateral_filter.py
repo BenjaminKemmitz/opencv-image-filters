@@ -1,8 +1,7 @@
 import cv2
 
 def bilateral_filter(image, d=9, sigmaColor=75, sigmaSpace=75):
-    img = cv2.imread(image)
-    filtered = cv2.bilateralFilter(img, d, sigmaColor, sigmaSpace)
+    filtered = cv2.bilateralFilter(image, d, sigmaColor, sigmaSpace)
     return filtered
 
 if __name__ == "__main__":
