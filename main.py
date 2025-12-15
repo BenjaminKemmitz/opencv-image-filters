@@ -143,9 +143,15 @@ def main():
     print(f"Edge Density: {edge_density:.4f}")
     print(f"Runtime: {runtime:.6f} seconds")
 
+    # ----------------------------
+    # Save output
+    # ----------------------------
+    output_dir = os.path.join(project_root, "images", "output")
+    os.makedirs(output_dir, exist_ok=True)
+
     metrics_path = os.path.join(project_root, "experiments", "metrics.csv")
     os.makedirs(os.path.dirname(metrics_path), exist_ok=True)
-
+    
     row = {
         "image": os.path.basename(args.image),
         "filter": filter_name,
@@ -161,11 +167,6 @@ def main():
         df.to_csv(metrics_path, mode="a", header=False, index=False)
     else:
         df.to_csv(metrics_path, index=False)
-    # ----------------------------
-    # Save output
-    # ----------------------------
-    output_dir = os.path.join(project_root, "images", "output")
-    os.makedirs(output_dir, exist_ok=True)
     
     import time
 
