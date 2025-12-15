@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 def morphology(image):
-    _, binary = cv2.threshold(img, 128, 255, cv2.THRESH_BINARY)
+    _, binary = cv2.threshold(image, 128, 255, cv2.THRESH_BINARY)
 
     kernel = np.ones((5,5), np.uint8)
 
