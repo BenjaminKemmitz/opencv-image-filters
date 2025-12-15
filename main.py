@@ -112,6 +112,9 @@ def main():
         list_filters()
         sys.exit(1)
 
+    import os
+    project_root = os.path.dirname(os.path.abspath(__file__))
+    
     # Load image
     original = cv2.imread(args.image)
     if original is None:
@@ -159,7 +162,6 @@ def main():
     # ----------------------------
     # Save output
     # ----------------------------
-    project_root = os.path.dirname(os.path.abspath(__file__))
     output_dir = os.path.join(project_root, "images", "output")
     os.makedirs(output_dir, exist_ok=True)
 
