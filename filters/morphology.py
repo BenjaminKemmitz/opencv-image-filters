@@ -1,3 +1,5 @@
+# Morphological Operations Includes opening to manipulate image structures—often used for noise removal and shape analysis.
+
 import cv2
 import numpy as np
 
