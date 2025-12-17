@@ -1,6 +1,6 @@
 # OpenCV Image Filters Benchmark Suite
 
-A **research-oriented computer vision project** that implements, benchmarks, and analyzes classical OpenCV image-processing filters under clean, noisy, and dataset-scale conditions.
+A research-oriented computer vision project that implements, benchmarks, and analyzes classical OpenCV image-processing filters under clean, noisy, and dataset-scale conditions.
 
 This project goes beyond simple demos by providing:
 
@@ -9,13 +9,13 @@ This project goes beyond simple demos by providing:
 * Noise robustness benchmarking
 * Automated plots and Markdown experiment reports
 
-Designed as a **portfolio-quality** and **research-preparatory** project for robotics and computer vision work.
+Designed as a portfolio-quality and research-preparatory project for robotics and computer vision work.
 
 ---
 
 ## Features
 
-* 16 classical OpenCV filters implemented in a **modular architecture**
+* 16 classical OpenCV filters implemented in a modular architecture
 * Command-line interface (CLI) with multiple execution modes
 * Automatic experiment logging to CSV
 * Noise robustness benchmarking (Gaussian noise)
@@ -154,7 +154,7 @@ experiments/noise/
 ├── noise_ssim.png
 ```
 
-These plots visualize **robustness vs noise strength**, a common evaluation in computer vision research.
+These plots visualize robustness vs noise strength, a common evaluation in computer vision research.
 
 ---
 
@@ -184,7 +184,7 @@ Each experiment generates a Markdown report containing:
 * Metrics table
 * Key quantitative findings
 
-This enables **reproducible, documented experimentation**.
+This enables reproducible, documented experimentation.
 
 ---
 
@@ -210,7 +210,7 @@ This project was built to:
 
 ## Future Work (Intentionally Out of Scope)
 
-This project is considered **complete**. Possible future directions are intentionally left to **separate projects**, such as:
+This project is considered complete. Possible future directions are intentionally left to separate projects, such as:
 
 * Learning-based denoising (CNNs)
 * Vision-guided robotics systems
@@ -223,7 +223,9 @@ This project is considered **complete**. Possible future directions are intentio
 **Ben Kemmitz**
 Robotics • Computer Vision • Python
 
-GitHub: [https://github.com/BenjaminKemmitz](https://github.com/BenjaminKemmitz)
+* GitHub: [https://github.com/BenjaminKemmitz](https://github.com/BenjaminKemmitz)
+* Website: [benjaminkemmitz.com](benjaminkemmitz.com)
+* LinkedIn: [https://www.linkedin.com/in/ben-kemmitz-a50442399/](https://www.linkedin.com/in/ben-kemmitz-a50442399/)
 
 ---
 
