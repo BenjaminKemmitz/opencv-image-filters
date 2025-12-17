@@ -1,86 +1,232 @@
-# OpenCV Image Filters Collection
+# OpenCV Image Filters Benchmark Suite
 
-A collection of classic and custom image-processing filters implemented using Python + OpenCV.
-This repository is part of a larger computer-vision learning portfolio demonstrating core image-processing fundamentals.
+A **research-oriented computer vision project** that implements, benchmarks, and analyzes classical OpenCV image-processing filters under clean, noisy, and dataset-scale conditions.
 
-# Project Goals
+This project goes beyond simple demos by providing:
 
-Build a reusable set of OpenCV-based filters.
+* Quantitative metrics (PSNR, SSIM, edge density, runtime)
+* Dataset-level aggregation
+* Noise robustness benchmarking
+* Automated plots and Markdown experiment reports
 
-Learn convolution, kernels, and image transformations.
+Designed as a **portfolio-quality** and **research-preparatory** project for robotics and computer vision work.
 
-Showcase clean, documented Python code suitable for a robotics/computer-vision portfolio.
+---
 
-Provide a modular folder structure usable in future robotics/AI projects.
+## Features
 
-# Requirements
+* 16 classical OpenCV filters implemented in a **modular architecture**
+* Command-line interface (CLI) with multiple execution modes
+* Automatic experiment logging to CSV
+* Noise robustness benchmarking (Gaussian noise)
+* Dataset-level evaluation with mean / std aggregation
+* Publication-style plots (PSNR, SSIM, runtime, edge density)
+* Auto-generated Markdown experiment reports
 
-Install dependencies:
+---
 
-pip install opencv-python numpy
+## Project Structure
 
-# How to Run
+```
+opencv-image-filters/
+│── filters/                # Individual filter implementations
+│── images/
+│   ├── input/              # Input images
+│   └── output/             # Filtered outputs
+│── experiments/
+│   ├── noise/              # Noise robustness experiments
+│   ├── dataset/            # Dataset-level experiments
+│   └── metrics_*.csv       # Per-run metrics
+│── main.py                 # Main CLI entry point
+│── requirements.txt
+│── README.md
+```
 
-Run any filter individually:
+---
 
-python filters/blur_filter.py --image assets/sample.jpg
+## Installation
 
+### 1. Clone the repository
 
-Or run the main demo:
+```bash
+git clone https://github.com/BenjaminKemmitz/opencv-image-filters.git
+cd opencv-image-filters
+```
 
-python main.py --image assets/sample.jpg --filter blur
+### 2. Create and activate a virtual environment
 
-# Available Filters
-1. Gaussian Blur
-Applies a Gaussian kernel to smooth an image, reducing noise and detail while preserving overall structure.
-2. Median Filter
-Replaces each pixel with the median of its neighborhood, highly effective for removing salt-and-pepper noise.
-3. Bilateral Filter
-Smooths images while preserving edges by combining spatial and intensity information—ideal for denoising without blurring edges.
-4. Sobel Operator
-Computes gradient magnitude in the x and y directions to highlight vertical and horizontal edges.
-5. Laplacian Filter
-Uses the second derivative of pixel intensity to detect regions of rapid intensity change—useful for highlighting fine edges.
-6. Canny Edge Detector
-A multi-stage edge detection algorithm that uses gradients, smoothing, and thresholding to extract clean, accurate edges.
-7. Morphological Operations
-Includes erosion, dilation, opening, and closing to manipulate image structures—often used for noise removal and shape analysis.
-8. HSV Color Segmentation
-Converts the image to HSV space and isolates pixels within color ranges, allowing robust color-based masking and detection.
-9. Basic Thresholding
-Converts an image to binary by comparing pixel intensity to a fixed threshold value.
-10. Adaptive Thresholding
-Determines local thresholds for small regions, performing well in uneven lighting conditions.
-11. Otsu’s Thresholding
-Automatically computes the optimal threshold by maximizing inter-class variance—ideal when the image histogram is bimodal.
-12. Harris Corner Detector
-Detects corners by analyzing variations in intensity in local windows—useful for tracking and alignment tasks.
-13. Shi-Tomasi Good Features to Track
-An improvement over Harris that selects the most stable corners for tracking in real-time applications.
-14. ORB Feature Detector
-A fast, rotation-invariant keypoint detector and descriptor generator used in SLAM, mapping, and object recognition.
-15. FAST Corner Detector
-Extremely fast corner detector ideal for real-time vision tasks, especially in embedded or robotics systems.
-16. Custom Sharpening Filter
-Enhances edges and fine details using a manually designed convolution kernel to increase image crispness.
-# Output (Will Add Screenshots)
+```bash
+python -m venv venv
+venv\Scripts\activate  # Windows
+# source venv/bin/activate  # macOS / Linux
+```
 
-assets/examples/blur_result.png
-assets/examples/cartoon_result.png
+### 3. Install dependencies
 
-# Extending the Project
+```bash
+pip install -r requirements.txt
+```
 
-Next steps:
-Add real-time webcam filter versions.
-Add custom convolution kernels (motion blur, Sobel, Laplacian).
-Implement CUDA acceleration using OpenCV GPU.
-Package as a pip-installable module.
+---
 
-# Contributing
+## Usage (CLI)
 
-This repository is part of a pre-college robotics/computer-vision learning portfolio.
-Future pull requests may add more filters or real-time versions.
+### List available filters
 
-# License
+```bash
+python main.py --list
+```
 
-MIT License (or whichever you prefer)
+### Run a single filter
+
+```bash
+python main.py --image images/input/sunrise.jpeg --filter blur
+```
+
+### Run all filters on one image
+
+```bash
+python main.py --image images/input/sunrise.jpeg --all --no-display
+```
+
+### Run dataset-level benchmarking
+
+```bash
+python main.py --dataset images/input
+```
+
+### Run noise robustness benchmarking
+
+```bash
+python main.py --image images/input/sunrise.jpeg --noise-benchmark
+```
+
+---
+
+## Implemented Filters
+
+* Gaussian Blur
+* Median Filter
+* Bilateral Filter
+* Sobel Edge Detector
+* Laplacian Edge Detector
+* Canny Edge Detector
+* Morphological Operations
+* HSV Color Segmentation
+* Basic Thresholding
+* Adaptive Thresholding
+* Otsu’s Thresholding
+* Harris Corner Detector
+* Shi–Tomasi Feature Detector
+* FAST Corner Detector
+* ORB Feature Detector
+* Custom Sharpening Filter
+
+---
+
+## Metrics Explained
+
+| Metric           | Description                                                   |
+| ---------------- | ------------------------------------------------------------- |
+| **PSNR**         | Measures signal fidelity between original and filtered images |
+| **SSIM**         | Structural similarity index (perceptual quality)              |
+| **Edge Density** | Fraction of edge pixels (Canny-based)                         |
+| **Runtime (ms)** | Filter execution time                                         |
+
+---
+
+## Noise Robustness Benchmarking
+
+The noise benchmark evaluates filter performance under increasing Gaussian noise levels.
+
+For each noise level (σ = 5 → 50):
+
+1. Noise is added to the original image
+2. Each filter is applied
+3. PSNR and SSIM are measured against the clean image
+
+### Outputs
+
+```
+experiments/noise/
+├── noise_metrics.csv
+├── noise_psnr.png
+├── noise_ssim.png
+```
+
+These plots visualize **robustness vs noise strength**, a common evaluation in computer vision research.
+
+---
+
+## Dataset-Level Experiments
+
+When run in dataset mode, the system:
+
+* Processes all images in a directory
+* Logs per-image metrics
+* Aggregates mean and standard deviation per filter
+
+Outputs:
+
+```
+experiments/dataset/
+├── dataset_metrics.csv
+├── aggregated_metrics.csv
+```
+
+---
+
+## Automated Reports
+
+Each experiment generates a Markdown report containing:
+
+* Summary of best-performing filters
+* Metrics table
+* Key quantitative findings
+
+This enables **reproducible, documented experimentation**.
+
+---
+
+## Key Findings (Example)
+
+* Gaussian blur achieves the highest PSNR under Gaussian noise
+* Bilateral filtering preserves edges better at the cost of runtime
+* Edge detectors degrade rapidly as noise increases
+* Classical filters show clear trade-offs between speed and fidelity
+
+---
+
+## Project Goals
+
+This project was built to:
+
+* Demonstrate strong foundations in classical computer vision
+* Practice experimental design and benchmarking
+* Prepare for robotics and vision research
+* Serve as a portfolio-ready, grad-school-quality project
+
+---
+
+## Future Work (Intentionally Out of Scope)
+
+This project is considered **complete**. Possible future directions are intentionally left to **separate projects**, such as:
+
+* Learning-based denoising (CNNs)
+* Vision-guided robotics systems
+* Real-time performance optimization
+
+---
+
+## Author
+
+**Ben Kemmitz**
+Robotics • Computer Vision • Python
+
+GitHub: [https://github.com/BenjaminKemmitz](https://github.com/BenjaminKemmitz)
+
+---
+
+## License
+
+This project is released for educational and portfolio use.
