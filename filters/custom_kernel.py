@@ -1,3 +1,5 @@
+# Custom Sharpening Filter Enhances edges and fine details using a manually designed convolution kernel to increase image crispness.
+
 import cv2
 import numpy as np
 
@@ -12,13 +14,3 @@ def custom_kernel(image):
     
     filtered = cv2.filter2D(image, -1, kernel)
     return filtered
-
-# Check if main file
-if __name__ == "__main__":
-    path = "../images/input/sample.jpg"
-    output_path = "../images/output/custom_sharpen.jpg"
-  
-    #Output sharper image through custom_filter function
-    result = custom_filter(path)
-    cv2.imwrite(output_path, result)
-    print(f"Saved: {output_path}")
