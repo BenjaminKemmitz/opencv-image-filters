@@ -1,3 +1,5 @@
+# Shi-Tomasi Good Features to Track An improvement over Harris that selects the most stable corners for tracking in real-time applications.
+
 import cv2
 
 def shi_tomasi(image, max_corners=100):
@@ -13,7 +15,7 @@ def shi_tomasi(image, max_corners=100):
 
     corners = cv2.goodFeaturesToTrack(gray, max_corners, 0.01, 10)
 
-    # IMPORTANT: work on a copy
+    # Work on a copy
     result = image.copy()
 
     if corners is not None:
@@ -22,8 +24,3 @@ def shi_tomasi(image, max_corners=100):
             cv2.circle(result, (x, y), 4, (0, 255, 0), -1)
 
     return result
-
-if __name__ == "__main__":
-    img = shi_tomasi("../images/input/sample.jpg")
-    cv2.imwrite("../images/output/shi_tomasi.jpg", img)
-
