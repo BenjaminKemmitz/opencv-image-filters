@@ -1,3 +1,5 @@
+# Canny Edge Detector A multi-stage edge detection algorithm that uses gradients, smoothing, and thresholding to extract clean, accurate edges.
+
 import cv2
 
 def canny_edge(image, low=100, high=200):
@@ -17,15 +19,3 @@ def canny_edge(image, low=100, high=200):
 
     # Convert back to BGR for pipeline consistency
     return cv2.cvtColor(edges, cv2.COLOR_GRAY2BGR)
-
-
-# Standalone test
-if __name__ == "__main__":
-    img = cv2.imread("../images/input/sample.jpg")
-    if img is None:
-        raise ValueError("Could not load input image")
-
-    edges = canny_edge(img)
-    cv2.imwrite("../images/output/canny_edge.jpg", edges)
-    print("Saved: ../images/output/canny_edge.jpg")
-
