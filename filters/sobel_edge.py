@@ -1,3 +1,5 @@
+# Sobel Operator Computes gradient magnitude in the x and y directions to highlight vertical and horizontal edges.
+
 import cv2
 import numpy as np
 
@@ -15,13 +17,3 @@ def sobel_edge(image):
     magnitude = np.uint8(255 * magnitude / np.max(magnitude))
 
     return magnitude
-
-# Check for main program or being imported as module
-if __name__ == "__main__":
-    path = "../images/input/sample.jpg"
-    output_path = "../images/output/sobel_edge.jpg"
-    
-    edges = sobel_edge(path)
-    cv2.imwrite(output_path, edges)
-    print(f"Saved: {output_path}")
-
