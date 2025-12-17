@@ -1,3 +1,5 @@
+# FAST Corner Detector Extremely fast corner detector ideal for real-time vision tasks, especially in embedded or robotics systems.
+
 import cv2
 
 def fast_features(image):
@@ -8,8 +10,3 @@ def fast_features(image):
 
     out = cv2.drawKeypoints(image, keypoints, None, color=(255,0,0))
     return out
-
-if __name__ == "__main__":
-    img = fast_features("../images/input/sample.jpg")
-    cv2.imwrite("../images/output/fast_features.jpg", img)
-
