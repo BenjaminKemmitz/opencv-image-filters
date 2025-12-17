@@ -1,3 +1,5 @@
+# Adaptive Thresholding Determines local thresholds for small regions, performing well in uneven lighting conditions.
+
 import cv2
 
 def adaptive_threshold(image):
@@ -14,7 +16,3 @@ def adaptive_threshold(image):
 
      # Convert back to BGR for pipeline consistency
      return cv2.cvtColor(binary, cv2.COLOR_GRAY2BGR)
-
-if __name__ == "__main__":
-    result = adaptive_threshold("../images/input/sample.jpg")
-    cv2.imwrite("../images/output/adaptive_threshold.jpg", result)
