@@ -208,7 +208,7 @@ This project was built to:
 
 ---
 
-## Future Work (Intentionally Out of Scope)
+## Future Work
 
 This project is considered complete. Possible future directions are intentionally left to separate projects, such as:
 
