@@ -1,3 +1,5 @@
+# Harris Corner Detector Detects corners by analyzing variations in intensity in local windows—useful for tracking and alignment tasks.
+
 import cv2
 import numpy as np
 
@@ -11,8 +13,3 @@ def harris_corners(image):
     result[corners > 0.01 * corners.max()] = [0, 0, 255]
 
     return result
-
-if __name__ == "__main__":
-    img = harris_corners("../images/input/sample.jpg")
-    cv2.imwrite("../images/output/harris_corners.jpg", img)
-
